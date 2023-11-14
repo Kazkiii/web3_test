@@ -1,0 +1,43 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    volumes:
+      - ./app:/app:cached
+      - node_modules:/app/node_modules
+    working_dir: "/app"
+    ports:
+      - "3000:3000"
+      - "8080:8080"
+    command: sh -c "yarn dev"
+    tty: true
+    environment:
+      - HOST=0.0.0.0
+      - port=3000
+      - CHOKIDAR_USEPOLLING=true
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql:/var/lib/mysql
+  # firebase:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.firebase
+  #   ports:
+  #     - 4000:4000
+  #     - 9099:9099
+  #     - 4400:4400
+  #     - 4500:4500
+  #   volumes:
+  #     - ./firebase.json:/opt/firebase/firebase.json
+  #   working_dir: /opt/firebase
+  #   command: firebase emulators:start --project ${FIREBASE_PROJECT_ID}
+  #   tty: true
+volumes:
+  mysql:
+  node_modules:
