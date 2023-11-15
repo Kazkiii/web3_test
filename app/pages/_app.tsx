@@ -12,7 +12,14 @@ import {
   base,
   zora,
 } from 'wagmi/chains';
+import { infuraProvider } from 'wagmi/providers/infura'
 import { publicProvider } from 'wagmi/providers/public';
+
+const INFURA_API_KEY = process.env.NEXT_PUBLIC_INFURA_API_KEY
+const WALLETCONNECT_API_KEY = process.env.NEXT_PUBLIC_WALLETCONNECT_API_KEY
+
+if (!INFURA_API_KEY) throw Error('INFURA_API_KEY is undefined')
+if (!WALLETCONNECT_API_KEY) throw Error('WALLETCONNECT_API_KEY is undefined')
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
@@ -24,12 +31,15 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
     zora,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true' ? [goerli] : []),
   ],
-  [publicProvider()]
+  [
+    infuraProvider({ apiKey: INFURA_API_KEY }),
+    publicProvider()
+  ]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'RainbowKit App',
-  projectId: 'YOUR_PROJECT_ID',
+  appName: 'Test',
+  projectId: WALLETCONNECT_API_KEY,
   chains,
 });
 
