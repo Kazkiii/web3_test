@@ -1,0 +1,9 @@
+FROM node:lts-alpine
+
+RUN mkdir hardhat
+
+RUN apk update && \
+    apk upgrade && \
+    apk add git && \
+    yarn install && \
+    yarn add -D hardhat
